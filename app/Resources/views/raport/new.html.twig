@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                $('.js-lat').val(position.coords.latitude);
+                $('.js-long').val(position.coords.longitude);
+                // console.log(position.coords.latitude);
+
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+                <h3>Wyślij raport</h3>
+
+                {{ form_start(form) }}
+                {{ form_errors(form) }}
+
+                    {{ form_row(form.animal) }}
+                    {{ form_row(form.message, {'attr': {'placeholder': 'Raport' , 'novalidate': 'novalidate'} }) }}
+                {{ form_row(form.rLat) }}
+                {{ form_row(form.rLong) }}
+
+                <button type="submit" class="btn btn-primary">Wyślij</button>
+                {{ form_end(form) }}
+
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 300px;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100px;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('.js-animal-description-button').click(function (e) {
+            e.stopPropagation();
+            var animalId = $('#work_time_form_animal').val();
+            if (animalId == '') {
+                alert('Nie wybrałeś zwierzaka')
+            } else {
+                $('.js-animal-description-button').html('<i class="fa fa-refresh fa-spin"></i>');
+                $.ajax("/animal/" + animalId + "/description")
+                    .done(function (data) {
+                        $('.js-animal-description-button').html('<i class="fa fa-info-circle" aria-hidden="true"></i>');
+                        $('.modal-title').html(data['imie']);
+                        $('.modal-body').html(data['opis']);
+                        $('#myModal').appendTo('body').modal('show');
+                    })
+                ;
+            }
+        })
+    </script>
+    <script>
+        // Note: This example requires that you consent to location sharing when
+        // prompted by your browser. If you see the error "The Geolocation service
+        // failed.", it means you probably did not give permission for the browser to
+        // locate you.
+        var map, infoWindow;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 15
+            });
+            infoWindow = new google.maps.InfoWindow;
+
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    $('.js-lat').val(position.coords.latitude);
+                    $('.js-long').val(position.coords.longitude);
+                    // console.log(position.coords.latitude);
+
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Tu jestem.');
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+                }, function () {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4ZVF70f43kcBPa6NFzfUJMOs2-6O2qc0&callback=initMap">
+    </script>
+
+    {% if 0 in app.user.worktime|keys %}
+        <script>
+            // Set the date we're counting down to
+            var countDownDate = new Date("{{ app.user.worktime[0].start|date() }}").getTime();
+
+            // Update the count down every 1 second
+            var x = setInterval(function () {
+
+                // Get todays date and time
+                var now = new Date().getTime();
+
+                // Find the distance between now an the count down date
+                var distance = now - countDownDate;
+
+                // Time calculations for days, hours, minutes and seconds
+                // var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Display the result in the element with id="demo"
+                document.getElementById("demo").innerHTML = "( " + hours + "h "
+                    + minutes + "m " + seconds + "s " + ")";
+
+                // If the count down is finished, write some text
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("demo").innerHTML = "EXPIRED";
+                }
+            }, 1000);
+        </script>
+    {% endif %}
+{% endblock %}
+{% block body %}
+        {% include('worktime/__description.html.twig') %}
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <h4>Twój aktualny status to: {{ status }} <br>
+                    <small id="demo">()</small>
+                </h4>
+
+                {{ form_start(form) }}
+                {{ form_errors(form) }}
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            {{ form_row(form.animal) }}
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-info js-animal-description-button" data-toggle="modal"
+                                    data-target="#myModal">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    {{ form_row(form.status) }}
+                </div>
+                <div class="col-md-12">
+
+                    {{ form_row(form.message, {'attr': {'placeholder': 'Raport' , 'novalidate': 'novalidate'} }) }}
+                </div>
+                {{ form_row(form.rLat) }}
+                {{ form_row(form.rLong) }}
+
+                <button type="submit" class="btn btn-primary">Wyślij</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>Twoja lokalizacja</h4>
+                <div id="map"></div>
+            </div>
+        </div>
+{% endblock %}

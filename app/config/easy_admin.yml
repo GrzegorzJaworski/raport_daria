@@ -1,0 +1,84 @@
+easy_admin:
+    site_name: '<em style="font-size: 90%;">Opieka Nad Zwierzętami</em>'
+    design:
+            menu:
+                - label: 'Raport'
+                  children: ['WorkTime','Raport', 'Status']
+                - User
+                - Animal
+    list:
+        title: 'Lista: %%entity_label%%'
+        actions:
+            - { name: 'new', label: 'Nowy'}
+            - { name: 'show', icon: 'info-circle', label: '' }
+            - { name: 'edit', icon: 'pencil', label: '' }
+            - { name: 'delete', icon: 'trash', label: '' }
+
+    entities:
+        Raport:
+            class: AppBundle\Entity\Raport
+            list:
+                fields:
+                    - id
+                    - user
+                    - animal
+                    - message
+                    - date
+        Status:
+            class: AppBundle\Entity\Status
+            label: Statusy
+            list:
+                fields:
+                    - id
+                    - status
+        WorkTime:
+            class: AppBundle\Entity\WorkTime
+            label: Czas pracy
+        User:
+            class: AppBundle\Entity\User
+            label: Użytkownicy
+            disabled_actions: ['show']
+            list:
+                fields:
+                    - id
+                    - { property: 'username', label: 'Imię i Nazwisko' }
+                    - { property: 'email', type: 'email', label: 'Email' }
+                    - { property: 'hourlyRateVisit', label: 'Spacer (zł/h)', type_options: { currency: 'PLN' } }
+                    - { property: 'hourlyRateDrive', label: 'Dojazd (zł/h)', type_options: { currency: 'PLN' } }
+                    - { property: 'enabled', label: 'Aktywny' }
+                    - { property: 'lastLogin', format: 'H:m d-n-Y', label: 'Ostatnie logowanie' }
+                actions: ['-show']
+            edit:
+                title: 'Edycja: %%entity_label%%'
+                fields:
+                    - { property: 'username', label: 'Imię i Nazwisko' }
+                    - { property: 'email', type: 'email' }
+                    - { property: 'hourlyRateVisit', type: 'money', label: 'Stawka spacer', type_options: { currency: 'PLN' } }
+                    - { property: 'hourlyRateDrive', type: 'money', label: 'Stawka dojazd', type_options: { currency: 'PLN' } }
+                    - { property: 'enabled', type: 'checkbox', label: 'Aktywny?' }
+                    - { property: 'plainPassword', type_options: { required: false} }
+                    - { property: 'roles', type: 'choice', type_options: { multiple: true, choices: { 'Opiekun': 'ROLE_USER', 'Admin': 'ROLE_ADMIN' } } }
+                form_options: { validation_groups: ['Profile'] }
+            new:
+                title: 'Nowy użytkownik'
+                fields:
+                    - { property: 'username', label: 'Imię i Nazwisko' }
+                    - { property: 'email', type: 'email' }
+                    - { property: 'hourlyRateVisit', type: 'money', label: 'Stawka spacer', type_options: { currency: 'PLN' } }
+                    - { property: 'hourlyRateDrive', type: 'money', label: 'Stawka dojazd', type_options: { currency: 'PLN' } }
+                    - { property: 'enabled', type: 'checkbox', label: 'Aktywny?' }
+                    - { property: 'plainPassword', type: 'password', label: 'Hasło', type_options: { required: true} }
+                    - { property: 'roles', label: 'Rodzaj', type: 'choice', type_options: { multiple: true, choices: { 'Opiekun': 'ROLE_USER', 'Admin': 'ROLE_ADMIN' } } }
+                form_options: { validation_groups: ['Registration'] }
+        Animal:
+            class: AppBundle\Entity\Animal
+            label: Zwierzęta
+            form:
+                title: 'Nowe zwierzątko'
+                fields:
+                    - { property: 'name', label: 'Imię' }
+                    - { property: 'address', label: 'Adres', help: 'adres nr, miasto' }
+                    - { property: 'hourlyRate', type: 'money', label: 'Stawka godzinowa', type_options: { currency: 'PLN' } }
+                    - { property: 'description', type: 'ckeditor', label: 'Opis' }
+                    - { property: 'playlistId', label: 'Id playlisty' }
+                form_options: { validation_groups: ['Registration'] }
