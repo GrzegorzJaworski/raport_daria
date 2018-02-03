@@ -53,7 +53,9 @@ class WorkTimeController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($workTime);
-            $em->persist($actualWorkTime);
+            if ($actualWorkTime) {
+                $em->persist($actualWorkTime);
+            }
             $em->flush();
 
             $this->addFlash('success', 'Raport wysłany');
