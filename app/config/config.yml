@@ -37,6 +37,8 @@ framework:
 # Twig Configuration
 twig:
     debug: '%kernel.debug%'
+    paths:
+        '%kernel.project_dir%/vendor/javiereguiluz/easyadmin-bundle/src/Resources/views': EasyAdmin
     strict_variables: '%kernel.debug%'
     form_themes:
         - bootstrap_3_layout.html.twig

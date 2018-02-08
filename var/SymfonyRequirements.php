@@ -609,8 +609,8 @@ class SymfonyRequirements extends RequirementCollection
             (version_compare($installedPhpVersion, '5.3.18', '>=') && version_compare($installedPhpVersion, '5.4.0', '<'))
             ||
             version_compare($installedPhpVersion, '5.4.8', '>='),
-            'You should use PHP 5.3.18+ or PHP 5.4.8+ to always get nice error raport for fatal errors in the development environment due to PHP bug #61767/#60909',
-            'Install PHP 5.3.18+ or PHP 5.4.8+ if you want nice error raport for all fatal errors in the development environment.'
+            'You should use PHP 5.3.18+ or PHP 5.4.8+ to always get nice error messages for fatal errors in the development environment due to PHP bug #61767/#60909',
+            'Install PHP 5.3.18+ or PHP 5.4.8+ if you want nice error messages for all fatal errors in the development environment.'
         );
 
         if (null !== $pcreVersion) {
@@ -707,7 +707,7 @@ class SymfonyRequirements extends RequirementCollection
                 create_function('$cfgValue', 'return (int) $cfgValue === 0;'),
                 true,
                 'intl.error_level should be 0 in php.ini',
-                'Set "<strong>intl.error_level</strong>" to "<strong>0</strong>" in php.ini<a href="#phpini">*</a> to inhibit the raport when an error occurs in ICU functions.'
+                'Set "<strong>intl.error_level</strong>" to "<strong>0</strong>" in php.ini<a href="#phpini">*</a> to inhibit the messages when an error occurs in ICU functions.'
             );
         }
 

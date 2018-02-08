@@ -26,6 +26,9 @@ class WorkTimeController extends Controller
      * @param Request $request
      * @param RaportMail $raportMail
      * @return Response
+     * @throws ContainerExceptionInterface
+     * @throws Error
+     * @throws NotFoundExceptionInterface
      */
     public function newAction(Request $request, RaportMail $raportMail)
     {
@@ -60,12 +63,7 @@ class WorkTimeController extends Controller
 
             $this->addFlash('success', 'Raport wysłany');
 
-            try {
-                $raportMail->sendRaportMail($workTime);
-            } catch (NotFoundExceptionInterface $e) {
-            } catch (ContainerExceptionInterface $e) {
-            } catch (Error $e) {
-            }
+            $raportMail->sendRaportMail($workTime);
 
             return $this->redirectToRoute('homepage');
         }

@@ -1,5 +1,7 @@
 easy_admin:
     site_name: '<em style="font-size: 90%;">Opieka Nad Zwierzętami</em>'
+    list:
+        actions: ['export']
     design:
             menu:
                 - label: 'Raport'
