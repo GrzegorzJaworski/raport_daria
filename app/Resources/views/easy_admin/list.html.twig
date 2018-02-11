@@ -1,13 +1,80 @@
 {% extends '@EasyAdmin/default/list.html.twig' %}
 
-{% block global_actions %}
-    {{ parent() }}
-    {% if easyadmin_action_is_enabled_for_list_view('export', _entity_config.name) %}
-        <div class="button-action">
-            <a class="btn btn-primary" href="{{ path('easyadmin', _request_parameters|merge({ action: 'export' })) }}">
-                <i class="fa fa-download"></i>
-                Export
-            </a>
+{% block content_header %}
+
+    {% if easyadmin_action_is_enabled_for_list_view('searchData', _entity_config.name) %}
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="title">{{ block('content_title') }}</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
+                        aria-expanded="false" aria-controls="collapseExample">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
         </div>
+        <div class="row">
+
+        <div class="collapse" id="collapseExample">
+            <div class="well">
+                <div class="row">
+                <div class="col-sm-12">
+                <form method="get" action="{{ path('easyadmin') }}">
+                    <input type="hidden" name="action" value="search">
+                    <input type="hidden" name="entity" value="{{ _request_parameters.entity }}">
+                    <input type="hidden" name="sortField"
+                           value="{{ _entity_config.search.sort.field|default(_request_parameters.sortField) }}">
+                    <input type="hidden" name="sortDirection"
+                           value="{{ _entity_config.search.sort.direction|default(_request_parameters.sortDirection) }}">
+                    <input type="hidden" name="menuIndex" value="{{ _request_parameters.menuIndex }}">
+                    <input type="hidden" name="submenuIndex" value="{{ _request_parameters.submenuIndex }}">
+                    <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="searchInput">Szukaj</label>
+                            <input class="form-control" id="searchInput" type="search" name="query"
+                                   value="{{ app.request.get('query')|default('') }}">
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <label for="dateForInput">Od</label>
+                            <input type="date" class="form-control" id="dateForInput" name="dateFor">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="dateUntilInput">Do</label>
+                            <input type="date" class="form-control" id="dateUntilInput" name="dateUntil">
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button class="btn" type="submit">
+                                <i class="fa fa-search"></i>
+                                <span class="hidden-xs hidden-sm">{{ _action.label|default('action.search')|trans(_trans_parameters) }}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    {% else %}
+        {{ parent() }}
     {% endif %}
-{% endblock global_actions %}
+{% endblock content_header %}
+
+{% block item_actions %}
+    {% set _list_item_actions = _list_item_actions|filter_admin_actions(item) %}
+    {{ parent() }}
+{% endblock %}

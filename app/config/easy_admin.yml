@@ -1,7 +1,7 @@
 easy_admin:
     site_name: '<em style="font-size: 90%;">Opieka Nad Zwierzętami</em>'
-    list:
-        actions: ['export']
+#    list:
+#        actions: ['searchData']
     design:
             menu:
                 - label: 'Raport'
@@ -26,6 +26,7 @@ easy_admin:
                     - animal
                     - message
                     - date
+                actions: ['searchData']
         Status:
             class: AppBundle\Entity\Status
             label: Statusy
