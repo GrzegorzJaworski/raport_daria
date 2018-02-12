@@ -43,7 +43,7 @@
 
                         <div class="form-group">
                             <label for="dateForInput">Od</label>
-                            <input type="date" class="form-control" id="dateForInput" name="dateFor">
+                            <input type="date" class="form-control" id="dateForInput" name="dateFor" value="{{ app.request.get('dateFor')|default('') }}">
                         </div>
                     </div>
                     <div class="col-sm-6">
