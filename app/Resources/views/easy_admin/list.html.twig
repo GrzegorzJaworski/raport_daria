@@ -13,14 +13,14 @@
                 <h1 class="title">{{ block('content_title') }}</h1>
             </div>
             <div class="col-sm-6 text-right">
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseSearch"
                         aria-expanded="false" aria-controls="collapseExample">
                     <i class="fa fa-search"></i>
                 </button>
             </div>
         </div>
 
-        <div class="collapse" id="collapseExample">
+        <div class="collapse" id="collapseSearch">
             <div class="well">
                 <div class="row">
                     <div class="col-sm-12">
@@ -84,8 +84,8 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="searchInput">Szukaj</label>
-                                            <input class="form-control" id="searchInput" type="search" name="query"
+                                            {#<label for="searchInput">Szukaj</label>#}
+                                            <input class="form-control" id="searchInput" type="search" name="query" placeholder="Wiadomość..."
                                                    value="{{ app.request.get('query')|default('') }}">
                                         </div>
                                     </div>
@@ -94,15 +94,15 @@
                                     <div class="col-sm-6">
 
                                         <div class="form-group">
-                                            <label for="dateForInput">Od</label>
-                                            <input type="date" class="form-control" id="dateForInput" name="dateFor"
+                                            {#<label for="dateForInput">Od</label>#}
+                                            <input type="text" class="form-control js-datepicker" id="dateForInput" name="dateFor" placeholder="Od"
                                                    value="{{ app.request.get('dateFor')|default('') }}">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="dateUntilInput">Do</label>
-                                            <input type="date" class="form-control" id="dateUntilInput" name="dateUntil"
+                                            {#<label for="dateUntilInput">Do</label>#}
+                                            <input type="text" class="form-control js-datepicker" id="dateUntilInput" name="dateUntil" placeholder="Do"
                                                    value="{{ app.request.get('dateUntil')|default('') }}">
                                         </div>
                                     </div>
@@ -138,10 +138,32 @@
     {% if easyadmin_action_is_enabled_for_list_view('searchData', _entity_config.name) %}
         <script src="{{ asset("vendor/jquery-ui-1.12.1/jquery-ui.js") }}"></script>
         <script>
-
+            $.datepicker.regional['pl'] = {closeText: "Zamknij",
+                prevText: "&#x3C;Poprzedni",
+                nextText: "Następny&#x3E;",
+                currentText: "Dziś",
+                monthNames: [ "Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec",
+                    "Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień" ],
+                monthNamesShort: [ "Sty","Lu","Mar","Kw","Maj","Cze",
+                    "Lip","Sie","Wrz","Pa","Lis","Gru" ],
+                dayNames: [ "Niedziela","Poniedziałek","Wtorek","Środa","Czwartek","Piątek","Sobota" ],
+                dayNamesShort: [ "Nie","Pn","Wt","Śr","Czw","Pt","So" ],
+                dayNamesMin: [ "N","Pn","Wt","Śr","Cz","Pt","So" ],
+                weekHeader: "Tydz",
+                dateFormat: "dd.mm.yy",
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: "" };
+            $.datepicker.setDefaults($.datepicker.regional['pl']);
             $('.js-datepicker').datepicker({
-                format: 'yyyy-mm-dd'
+                dateFormat: 'yy-mm-dd',
             });
+        </script>
+    {% endif %}
+    {% if app.request.get('action') == "search" %}
+        <script>
+            $('#collapseSearch').collapse('show')
         </script>
     {% endif %}
 {% endblock %}
