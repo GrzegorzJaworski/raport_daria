@@ -1,5 +1,10 @@
 {% extends '@EasyAdmin/default/list.html.twig' %}
-
+{% block head_javascript %}
+    {{ parent() }}
+    {% if easyadmin_action_is_enabled_for_list_view('searchData', _entity_config.name) %}
+        <link rel="stylesheet" href="{{ asset("vendor/jquery-ui-1.12.1/jquery-ui.css") }}">
+    {% endif %}
+{% endblock %}
 {% block content_header %}
 
     {% if easyadmin_action_is_enabled_for_list_view('searchData', _entity_config.name) %}
@@ -14,61 +19,110 @@
                 </button>
             </div>
         </div>
-        <div class="row">
 
         <div class="collapse" id="collapseExample">
             <div class="well">
                 <div class="row">
-                <div class="col-sm-12">
-                <form method="get" action="{{ path('easyadmin') }}">
-                    <input type="hidden" name="action" value="search">
-                    <input type="hidden" name="entity" value="{{ _request_parameters.entity }}">
-                    <input type="hidden" name="sortField"
-                           value="{{ _entity_config.search.sort.field|default(_request_parameters.sortField) }}">
-                    <input type="hidden" name="sortDirection"
-                           value="{{ _entity_config.search.sort.direction|default(_request_parameters.sortDirection) }}">
-                    <input type="hidden" name="menuIndex" value="{{ _request_parameters.menuIndex }}">
-                    <input type="hidden" name="submenuIndex" value="{{ _request_parameters.submenuIndex }}">
-                    <div class="row">
                     <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="searchInput">Szukaj</label>
-                            <input class="form-control" id="searchInput" type="search" name="query"
-                                   value="{{ app.request.get('query')|default('') }}">
-                        </div>
-                    </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
+                        {% if _request_parameters.entity == "WorkTime" %}
+                            {{ form_start(form, {'method': 'GET'}) }}
+                            {{ form_errors(form) }}
+                            <input type="hidden" name="action" value="search">
+                            <input type="hidden" name="entity" value="{{ _request_parameters.entity }}">
+                            <input type="hidden" name="sortField"
+                                   value="{{ _entity_config.search.sort.field|default(_request_parameters.sortField) }}">
+                            <input type="hidden" name="sortDirection"
+                                   value="{{ _entity_config.search.sort.direction|default(_request_parameters.sortDirection) }}">
+                            <input type="hidden" name="menuIndex" value="{{ _request_parameters.menuIndex }}">
+                            <input type="hidden" name="submenuIndex" value="{{ _request_parameters.submenuIndex }}">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ form_row(form.message, { 'attr': {'placeholder': 'wiadomość ....'} ,'value' : app.request.get('work_time_admin_filter')['message']|default('')}) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form_row(form.user, {'value' : app.request.get('work_time_admin_filter')['user']|default('')}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ form_row(form.animal, {'value' : app.request.get('work_time_admin_filter')['animal']|default('')}) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form_row(form.status, {'value' : app.request.get('work_time_admin_filter')['status']|default('')}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ form_row(form.start, {'attr': {'placeholder': 'Od'} ,'value' : app.request.get('work_time_admin_filter')['animal']|default('')}) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form_row(form.end, {'attr': {'placeholder': 'Do'} ,'value' : app.request.get('work_time_admin_filter')['status']|default('')}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button class="btn" type="submit">
+                                        <i class="fa fa-search"></i>
+                                        <span class="hidden-xs hidden-sm">{{ _action.label|default('action.search')|trans(_trans_parameters) }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                            {{ form_end(form) }}
 
-                        <div class="form-group">
-                            <label for="dateForInput">Od</label>
-                            <input type="date" class="form-control" id="dateForInput" name="dateFor" value="{{ app.request.get('dateFor')|default('') }}">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="dateUntilInput">Do</label>
-                            <input type="date" class="form-control" id="dateUntilInput" name="dateUntil">
-                        </div>
-                    </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <button class="btn" type="submit">
-                                <i class="fa fa-search"></i>
-                                <span class="hidden-xs hidden-sm">{{ _action.label|default('action.search')|trans(_trans_parameters) }}</span>
-                            </button>
-                        </div>
-                    </div>
+                        {% else %}
 
-                </form>
-                </div>
+                            <form method="get" action="{{ path('easyadmin') }}">
+
+                                <input type="hidden" name="action" value="search">
+                                <input type="hidden" name="entity" value="{{ _request_parameters.entity }}">
+                                <input type="hidden" name="sortField"
+                                       value="{{ _entity_config.search.sort.field|default(_request_parameters.sortField) }}">
+                                <input type="hidden" name="sortDirection"
+                                       value="{{ _entity_config.search.sort.direction|default(_request_parameters.sortDirection) }}">
+                                <input type="hidden" name="menuIndex" value="{{ _request_parameters.menuIndex }}">
+                                <input type="hidden" name="submenuIndex" value="{{ _request_parameters.submenuIndex }}">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="searchInput">Szukaj</label>
+                                            <input class="form-control" id="searchInput" type="search" name="query"
+                                                   value="{{ app.request.get('query')|default('') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+
+                                        <div class="form-group">
+                                            <label for="dateForInput">Od</label>
+                                            <input type="date" class="form-control" id="dateForInput" name="dateFor"
+                                                   value="{{ app.request.get('dateFor')|default('') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="dateUntilInput">Do</label>
+                                            <input type="date" class="form-control" id="dateUntilInput" name="dateUntil"
+                                                   value="{{ app.request.get('dateUntil')|default('') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <button class="btn" type="submit">
+                                            <i class="fa fa-search"></i>
+                                            <span class="hidden-xs hidden-sm">{{ _action.label|default('action.search')|trans(_trans_parameters) }}</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
 
-        </div>
     {% else %}
         {{ parent() }}
     {% endif %}
@@ -77,4 +131,17 @@
 {% block item_actions %}
     {% set _list_item_actions = _list_item_actions|filter_admin_actions(item) %}
     {{ parent() }}
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    {% if easyadmin_action_is_enabled_for_list_view('searchData', _entity_config.name) %}
+        <script src="{{ asset("vendor/jquery-ui-1.12.1/jquery-ui.js") }}"></script>
+        <script>
+
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        </script>
+    {% endif %}
 {% endblock %}

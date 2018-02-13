@@ -25,7 +25,7 @@ easy_admin:
                     - user
                     - animal
                     - message
-                    - date
+                    - { property: 'date', format: 'd-n-Y H:m', label: 'Wysłany' }
                 actions: ['searchData']
         Status:
             class: AppBundle\Entity\Status
@@ -37,6 +37,15 @@ easy_admin:
         WorkTime:
             class: AppBundle\Entity\WorkTime
             label: Czas pracy
+            list:
+                fields:
+                    - id
+                    - { property: 'start', format: 'd-n-Y H:m', label: 'Start' }
+                    - { property: 'end', format: 'd-n-Y H:m', label: 'Koniec' }
+                    - user
+                    - animal
+                    - status
+                actions: ['searchData']
         User:
             class: AppBundle\Entity\User
             label: Użytkownicy
