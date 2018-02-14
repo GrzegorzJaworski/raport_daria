@@ -61,14 +61,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <button class="btn" type="submit">
+                                    <button class="btn" type="submit" name="searchButton">
                                         <i class="fa fa-search"></i>
                                         <span class="hidden-xs hidden-sm">{{ _action.label|default('action.search')|trans(_trans_parameters) }}</span>
                                     </button>
-                                        <a class="btn btn-primary" href="{{ path('easyadmin', _request_parameters|merge({ action: 'raport' })) }}">
+                                        <button class="btn btn-primary" type="submit" name="reportButton">
                                             <i class="fa fa-download"></i>
                                             Raport
-                                        </a>
+                                        </button>
                                 </div>
                             </div>
                             {{ form_end(form) }}
