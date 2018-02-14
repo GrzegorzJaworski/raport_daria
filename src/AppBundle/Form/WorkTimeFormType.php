@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Raport;
 use AppBundle\Entity\WorkTime;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -29,6 +30,10 @@ class WorkTimeFormType extends AbstractType
             ])
             ->add('animal', EntityType::class, [
                 'class' => 'AppBundle:Animal',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.name', 'ASC');
+                },
                 'choice_label' => 'name',
                 'placeholder' => '+Wybierz zwierzę+',
                 'label' => false,

@@ -53,10 +53,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    {{ form_row(form.start, {'attr': {'placeholder': 'Od'} ,'value' : app.request.get('work_time_admin_filter')['animal']|default('')}) }}
+                                    {{ form_row(form.start, {'attr': {'placeholder': 'Od'} ,'value' : app.request.get('work_time_admin_filter')['start']|default('')}) }}
                                 </div>
                                 <div class="col-sm-6">
-                                    {{ form_row(form.end, {'attr': {'placeholder': 'Do'} ,'value' : app.request.get('work_time_admin_filter')['status']|default('')}) }}
+                                    {{ form_row(form.end, {'attr': {'placeholder': 'Do'} ,'value' : app.request.get('work_time_admin_filter')['end']|default('')}) }}
                                 </div>
                             </div>
                             <div class="row">
@@ -65,6 +65,10 @@
                                         <i class="fa fa-search"></i>
                                         <span class="hidden-xs hidden-sm">{{ _action.label|default('action.search')|trans(_trans_parameters) }}</span>
                                     </button>
+                                        <a class="btn btn-primary" href="{{ path('easyadmin', _request_parameters|merge({ action: 'raport' })) }}">
+                                            <i class="fa fa-download"></i>
+                                            Raport
+                                        </a>
                                 </div>
                             </div>
                             {{ form_end(form) }}
@@ -137,25 +141,9 @@
     {{ parent() }}
     {% if easyadmin_action_is_enabled_for_list_view('searchData', _entity_config.name) %}
         <script src="{{ asset("vendor/jquery-ui-1.12.1/jquery-ui.js") }}"></script>
+        <script src="{{ asset("vendor/jquery-ui-1.12.1/datepicer-region-pl.js") }}"></script>
         <script>
-            $.datepicker.regional['pl'] = {closeText: "Zamknij",
-                prevText: "&#x3C;Poprzedni",
-                nextText: "Następny&#x3E;",
-                currentText: "Dziś",
-                monthNames: [ "Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec",
-                    "Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień" ],
-                monthNamesShort: [ "Sty","Lu","Mar","Kw","Maj","Cze",
-                    "Lip","Sie","Wrz","Pa","Lis","Gru" ],
-                dayNames: [ "Niedziela","Poniedziałek","Wtorek","Środa","Czwartek","Piątek","Sobota" ],
-                dayNamesShort: [ "Nie","Pn","Wt","Śr","Czw","Pt","So" ],
-                dayNamesMin: [ "N","Pn","Wt","Śr","Cz","Pt","So" ],
-                weekHeader: "Tydz",
-                dateFormat: "dd.mm.yy",
-                firstDay: 1,
-                isRTL: false,
-                showMonthAfterYear: false,
-                yearSuffix: "" };
-            $.datepicker.setDefaults($.datepicker.regional['pl']);
+
             $('.js-datepicker').datepicker({
                 dateFormat: 'yy-mm-dd',
             });

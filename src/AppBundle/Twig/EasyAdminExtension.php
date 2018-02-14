@@ -25,6 +25,7 @@ class EasyAdminExtension extends \Twig_Extension
     public function filterActions(array $itemActions)
     {
         unset($itemActions['searchData']);
+        unset($itemActions['raport']);
 
         return $itemActions;
     }

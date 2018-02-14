@@ -26,7 +26,7 @@ class EasyAdminSubscriber implements EventSubscriberInterface
     public function onPreSearch(GenericEvent $event)
     {
         $request = $event->getArgument('request');
-        if ( ($request->query->has("dateFor") || $request->query->has("dateUntil")) && $request->query->has("query") === '') {
+        if ( ($request->query->has("dateFor") || $request->query->has("dateUntil")) && $request->query->get("query") === '') {
             $request->query->set("query", true);
         } elseif ($request->query->has("work_time_admin_filter")) {
             $request->query->set("query", true);

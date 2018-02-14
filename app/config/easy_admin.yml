@@ -19,6 +19,7 @@ easy_admin:
     entities:
         Raport:
             class: AppBundle\Entity\Raport
+            controller: AppBundle\Controller\EasyAdmin\RaportController
             list:
                 fields:
                     - id
@@ -36,6 +37,7 @@ easy_admin:
                     - status
         WorkTime:
             class: AppBundle\Entity\WorkTime
+            controller: AppBundle\Controller\EasyAdmin\WorkTimeController
             label: Czas pracy
             list:
                 fields:
@@ -45,9 +47,10 @@ easy_admin:
                     - user
                     - animal
                     - status
-                actions: ['searchData']
+                actions: ['searchData', 'raport']
         User:
             class: AppBundle\Entity\User
+            controller: AppBundle\Controller\EasyAdmin\UserController
             label: Użytkownicy
             disabled_actions: ['show']
             list:

@@ -6,10 +6,11 @@
  * Time: 13:16
  */
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Filter;
 
 
 use AppBundle\Entity\WorkTime;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -29,12 +30,20 @@ class WorkTimeAdminFilterType extends AbstractType
             ])
             ->add('user', EntityType::class, [
                 'class' => 'AppBundle:User',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.username', 'ASC');
+                },
                 'placeholder' => '+Wybierz opiekuna+',
                 'label' => false,
                 'required' => false,
             ])
             ->add('animal', EntityType::class, [
                 'class' => 'AppBundle:Animal',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.name', 'ASC');
+                },
                 'choice_label' => 'name',
                 'placeholder' => '+Wybierz zwierzę+',
                 'label' => false,
