@@ -1,12 +1,28 @@
 <?php
 namespace AppBundle\Controller\EasyAdmin;
 
+use AppBundle\Entity\WorkTime;
 use AppBundle\Form\Filter\WorkTimeAdminFilterType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
 use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class AdminController extends BaseAdminController
 {
+    /**
+     * @Route("/dashboard", name="admin_dashboard")
+     */
+    public function dashboardAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $workTimeRepository = $em->getRepository(WorkTime::class);
+        return $this->render('easy_admin/dashboard.html.twig', [
+            'genusCount' => 5,
+            'publishedGenusCount' => 5,
+            'randomGenus' => 1
+        ]);
+    }
+
     protected function listAction()
     {
 
