@@ -22,6 +22,7 @@ class WorkTimeController extends AdminController
 
     public function createWorkTimeSearchQueryBuilder($entityClass, $searchQuery, array $searchableFields, $sortField = null, $sortDirection = null, $dqlFilter = null)
     {
+//        dump($this->request->query);die;
         $filterRequest = $this->request->query->get("work_time_admin_filter");
         $queryBuilder = parent::createSearchQueryBuilder($entityClass, $searchQuery, $searchableFields, $sortField, $sortDirection );
 

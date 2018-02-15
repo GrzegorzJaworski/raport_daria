@@ -25,6 +25,14 @@
                 <div class="row">
                     <div class="col-sm-12">
                         {% if _request_parameters.entity == "WorkTime" %}
+                            {% set _request_parameters = _request_parameters|merge({
+                                message: app.request.get('work_time_admin_filter')['message']|default(''),
+                                user: app.request.get('work_time_admin_filter')['user']|default(''),
+                                animal: app.request.get('work_time_admin_filter')['animal']|default(''),
+                                status: app.request.get('work_time_admin_filter')['status']|default(''),
+                                start: app.request.get('work_time_admin_filter')['start']|default(''),
+                                end: app.request.get('work_time_admin_filter')['end']|default(''),
+                            }) %}
                             {{ form_start(form, {'method': 'GET'}) }}
                             {{ form_errors(form) }}
                             <input type="hidden" name="action" value="search">
@@ -138,6 +146,30 @@
         {{ parent() }}
     {% endif %}
 {% endblock content_header %}
+
+{% block table_head %}
+    {% if easyadmin_action_is_enabled_for_list_view('searchData', _entity_config.name) %}
+        {% if _request_parameters.entity == "WorkTime" %}
+            {% set work_time_admin_filter = {
+                message: app.request.get('work_time_admin_filter')['message']|default(''),
+                user: app.request.get('work_time_admin_filter')['user']|default(''),
+                animal: app.request.get('work_time_admin_filter')['animal']|default(''),
+                status: app.request.get('work_time_admin_filter')['status']|default(''),
+                start: app.request.get('work_time_admin_filter')['start']|default(''),
+                end: app.request.get('work_time_admin_filter')['end']|default(''),
+            } %}
+            {% set _request_parameters = _request_parameters|merge({
+                work_time_admin_filter: work_time_admin_filter
+            }) %}
+        {% else %}
+            {% set _request_parameters = _request_parameters|merge({
+                dateFor: app.request.get('dateFor')|default(''),
+                dateUntil: app.request.get('dateUntil')|default('')
+            }) %}
+        {% endif %}
+    {% endif %}
+    {{ parent() }}
+{% endblock %}
 
 {% block item_actions %}
     {% set _list_item_actions = _list_item_actions|filter_admin_actions(item) %}

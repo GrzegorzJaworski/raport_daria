@@ -30,7 +30,7 @@ class AdminController extends BaseAdminController
     protected function searchAction()
     {
         $this->dispatch(EasyAdminEvents::PRE_SEARCH);
-
+//dump($this->request->query);die;
         if ($this->request->query->has('reportButton')){
             $response = $this->forward('AppBundle\Controller\EasyAdmin\WorkTimeController:raportAction');
             return $response;

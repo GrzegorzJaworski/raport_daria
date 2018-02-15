@@ -14,12 +14,11 @@ class RaportController extends AdminController
     public function createSearchQueryBuilder($entityClass, $searchQuery, array $searchableFields, $sortField = null, $sortDirection = null, $dqlFilter = null)
     {
         if ($this->request->query->get("dateFor") || $this->request->query->get("dateUntil")) {
-            dump($this->request->query->get('query'));
             if ($this->request->query->get('query') === true) {
                 $searchQuery = '';
                 $this->request->query->set('query',$searchQuery);
             }
-            $queryBuilder = parent::createSearchQueryBuilder($entityClass, $searchQuery, $searchableFields);
+            $queryBuilder = parent::createSearchQueryBuilder($entityClass, $searchQuery, $searchableFields, $sortField, $sortDirection);
             if ($this->request->query->get("dateFor")){
                 $queryBuilder
                     ->andWhere('entity.date >= :dateFor')
