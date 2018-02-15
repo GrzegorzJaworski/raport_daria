@@ -9,19 +9,21 @@
 namespace AppBundle\Controller\EasyAdmin;
 
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\QueryBuilder;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use AppBundle\Service\CsvExporter;
 
 class WorkTimeController extends AdminController
 {
+    private $csvExporter;
+
+    public function __construct(CsvExporter $csvExporter)
+    {
+        $this->csvExporter = $csvExporter;
+    }
 
     public function createWorkTimeSearchQueryBuilder($entityClass, $searchQuery, array $searchableFields, $sortField = null, $sortDirection = null, $dqlFilter = null)
     {
         $filterRequest = $this->request->query->get("work_time_admin_filter");
-        $queryBuilder = parent::createSearchQueryBuilder($entityClass, $searchQuery, $searchableFields);
+        $queryBuilder = parent::createSearchQueryBuilder($entityClass, $searchQuery, $searchableFields, $sortField, $sortDirection );
 
         foreach ($filterRequest as $key => $value) {
             if ($value !=='' && $key != "_token") {
@@ -44,34 +46,26 @@ class WorkTimeController extends AdminController
             }
         }
 
+        if ($this->request->query->has('reportButton')) {
+            $queryBuilder
+                ->leftJoin("entity.status", "status")
+                ->andWhere("status.isWorking = :test")
+                ->setParameter("test", 1)
+            ;
+        }
+
         if ($filterRequest['message'] !== '') {
             $this->request->query->set('query',$filterRequest['message']);
         } else {
             $this->request->query->set('query','');
         }
 
-        if ($this->request->query->has('reportButton')){
-           echo $this->getWorkTimeRaportAction($queryBuilder);
-           die();
-        } else{
-            return $queryBuilder;
-        }
+        return $queryBuilder;
     }
 
-    public function getWorkTimeRaportAction(QueryBuilder $queryBuilder)
+    public function raportAction()
     {
-        $entities = new ArrayCollection($queryBuilder->getQuery()->getResult());
-        $response = new StreamedResponse();
-
-        $response->setCallback(function () use ($entities){
-            $handle = fopen('php://output', 'w+');
-            fputcsv($handle, ['test']);
-            fclose($handle);
-        });
-        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . '' . '"');
-        return $response;
-//        dump($entities[2]->getAnimal()->getName());die;
-//        throw new \RuntimeException('Action for exporting an entity not defined');
+        $queryBuilder = $this->createWorkTimeSearchQueryBuilder($this->entity['class'], '', $this->entity['search']['fields'], 'start', 'ASC');
+        return $this->csvExporter->getWorkTimeRaport($queryBuilder);
     }
 }

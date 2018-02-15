@@ -69,6 +69,12 @@
                                             <i class="fa fa-download"></i>
                                             Raport
                                         </button>
+                                    {#<div class="button-action">#}
+                                        {#<a class="btn btn-primary" href="{{ path('easyadmin', _request_parameters|merge({ action: 'raport' })) }}">#}
+                                            {#<i class="fa fa-download"></i>#}
+                                            {#Export#}
+                                        {#</a>#}
+                                    {#</div>#}
                                 </div>
                             </div>
                             {{ form_end(form) }}
@@ -119,6 +125,7 @@
                                         </button>
                                     </div>
                                 </div>
+
 
                             </form>
                         {% endif %}

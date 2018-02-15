@@ -26,7 +26,7 @@ easy_admin:
                     - user
                     - animal
                     - message
-                    - { property: 'date', format: 'd-n-Y H:m', label: 'Wysłany' }
+                    - { property: 'date', format: 'd-m-Y H:i', label: 'Wysłany' }
                 actions: ['searchData']
         Status:
             class: AppBundle\Entity\Status
@@ -42,8 +42,8 @@ easy_admin:
             list:
                 fields:
                     - id
-                    - { property: 'start', format: 'd-n-Y H:m', label: 'Start' }
-                    - { property: 'end', format: 'd-n-Y H:m', label: 'Koniec' }
+                    - { property: 'start', format: 'd-m-Y H:i', label: 'Start' }
+                    - { property: 'end', format: 'd-m-Y H:i', label: 'Koniec' }
                     - user
                     - animal
                     - status
@@ -61,7 +61,7 @@ easy_admin:
                     - { property: 'hourlyRateVisit', label: 'Spacer (zł/h)', type_options: { currency: 'PLN' } }
                     - { property: 'hourlyRateDrive', label: 'Dojazd (zł/h)', type_options: { currency: 'PLN' } }
                     - { property: 'enabled', label: 'Aktywny' }
-                    - { property: 'lastLogin', format: 'H:m d-n-Y', label: 'Ostatnie logowanie' }
+                    - { property: 'lastLogin', format: 'H:i d-m-Y', label: 'Ostatnie logowanie' }
                 actions: ['-show']
             edit:
                 title: 'Edycja: %%entity_label%%'
