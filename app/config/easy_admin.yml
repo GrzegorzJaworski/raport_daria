@@ -4,10 +4,15 @@ easy_admin:
 #        actions: ['searchData']
     design:
             menu:
-                - label: 'Raport'
-                  children: ['WorkTime','Raport', 'Status']
-                - User
-                - Animal
+                - { label: 'Dashboard', route: 'admin_dashboard', icon: 'desktop', default: true }
+                - label: 'Raporty'
+                  icon: 'calendar'
+                  children:
+                      - { entity: 'WorkTime', label: 'Godziny pracy', icon: 'address-card' }
+                      - { entity: 'Raport', label: 'Raport', icon: 'envelope' }
+                      - 'Status'
+                - { entity: 'User', label: 'Użytkownicy', icon: 'user' }
+                - { entity: 'Animal', label: 'Zwierzęta', icon: 'paw' }
     list:
         title: 'Lista: %%entity_label%%'
         actions:
@@ -23,9 +28,9 @@ easy_admin:
             list:
                 fields:
                     - id
-                    - user
-                    - animal
-                    - message
+                    - { property: 'user', label: 'Opiekun' }
+                    - { property: 'animal', label: 'Zwierzę' }
+                    - { property: 'message', label: 'Raport' }
                     - { property: 'date', format: 'd-m-Y H:i', label: 'Wysłany' }
                 actions: ['searchData']
         Status:
@@ -44,8 +49,8 @@ easy_admin:
                     - id
                     - { property: 'start', format: 'd-m-Y H:i', label: 'Start' }
                     - { property: 'end', format: 'd-m-Y H:i', label: 'Koniec' }
-                    - user
-                    - animal
+                    - { property: 'user', label: 'Opiekun' }
+                    - { property: 'animal', label: 'Zwierzę' }
                     - status
                 actions: ['searchData', 'raport']
         User:
