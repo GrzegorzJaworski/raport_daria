@@ -3,16 +3,18 @@ easy_admin:
 #    list:
 #        actions: ['searchData']
     design:
-            menu:
-                - { label: 'Dashboard', route: 'admin_dashboard', icon: 'desktop', default: true }
-                - label: 'Raporty'
-                  icon: 'calendar'
-                  children:
-                      - { entity: 'WorkTime', label: 'Godziny pracy', icon: 'address-card' }
-                      - { entity: 'Raport', label: 'Raport', icon: 'envelope' }
-                      - 'Status'
-                - { entity: 'User', label: 'Użytkownicy', icon: 'user' }
-                - { entity: 'Animal', label: 'Zwierzęta', icon: 'paw' }
+#        brand_color: 'rgba(245,245,245, 0.8)'
+        color_scheme : 'light'
+        menu:
+            - { label: 'Dashboard', route: 'admin_dashboard', icon: 'desktop', default: true }
+            - label: 'Raporty'
+              icon: 'calendar'
+              children:
+                  - { entity: 'WorkTime', label: 'Godziny pracy', icon: 'address-card' }
+                  - { entity: 'Raport', label: 'Raport', icon: 'envelope' }
+                  - 'Status'
+            - { entity: 'User', label: 'Użytkownicy', icon: 'user' }
+            - { entity: 'Animal', label: 'Zwierzęta', icon: 'paw' }
     list:
         title: 'Lista: %%entity_label%%'
         actions:
