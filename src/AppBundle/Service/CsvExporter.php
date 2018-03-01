@@ -9,23 +9,31 @@
 namespace AppBundle\Service;
 
 
+use AppBundle\Entity\WorkTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CsvExporter
 {
+    private $financialStatement;
+
+    public function __construct(FinancialStatement $financialStatement)
+    {
+        $this->financialStatement = $financialStatement;
+    }
+
     public function getWorkTimeRaport(QueryBuilder $queryBuilder)
     {
-        $entities = new ArrayCollection($queryBuilder->getQuery()->getResult());
+        $workTimes = $queryBuilder->getQuery()->getResult();
+        $entities = new ArrayCollection($workTimes);
         $response = new StreamedResponse();
 //        $entity = $entities->current();
-        $response->setCallback(function () use ($entities) {
+        $response->setCallback(function () use ($entities, $workTimes) {
             $handle = fopen('php://output', 'w+');
             fputcsv($handle, ['Opiekun', 'Zwierzę', 'Status', 'Start', 'Koniec', 'Czas', 'Kwota']);
-            $amountSum = 0;
-            $incomSum = 0;
 
+            /** @var WorkTime $entity */
             while ($entity = $entities->current()) {
                 $timeDiff = $entity->getStart()->diff($entity->getEnd());
                 $row = [
@@ -37,26 +45,23 @@ class CsvExporter
                     $timeDiff->format('%h h i %i min')
                 ];
 
-                if ($entity->getStatus()->getId() == 1) { // dojazd
-                    $hourlyRate = $entity->getUser()->getHourlyRateDrive();
-                    $amount = $hourlyRate * $timeDiff->format('%h') + $hourlyRate * $timeDiff->format('%i') / 60;
-                    $row[] = round($amount, 2) . ' zl';
-                    $amountSum += round($amount, 2);
-                } elseif ($entity->getStatus()->getId() == 2) { //wizyta
-                    $hourlyRate = $entity->getUser()->getHourlyRateVisit();
-                    $amount = $hourlyRate * $timeDiff->format('%h') + $hourlyRate * $timeDiff->format('%i') / 60;
-                    $row[] = round($amount, 2) . ' zl';
-                    $amountSum += round($amount, 2);
-                    $incomSum += $entity->getAnimal()->getHourlyRate();
-                }
+                $oneVisitFinacialStatement = $this->financialStatement->oneVisit($entity);
+
+                $row[] = round($oneVisitFinacialStatement['amountSum'], 2) . ' zl';
 
                 fputcsv($handle, $row);
                 $entities->next();
             }
-            fputcsv($handle, ['Wypłata:', $amountSum. 'zl',
-                                'Przychód:', $incomSum. 'zl',
-                                'Dochód', $incomSum-$amountSum. 'zl'
-                ]);
+
+            $finacialStatement = $this->financialStatement->allTime($workTimes);
+
+            fputcsv($handle,
+                [
+                    'Wypłata:', $finacialStatement['amountSum'] . 'zl',
+                    'Przychód:', $finacialStatement['grossIncomSum'] . 'zl',
+                    'Dochód', $finacialStatement['netIncomSum'] . 'zl'
+                ]
+            );
 
             fclose($handle);
 

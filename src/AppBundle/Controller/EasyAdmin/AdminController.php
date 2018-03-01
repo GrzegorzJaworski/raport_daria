@@ -3,6 +3,7 @@ namespace AppBundle\Controller\EasyAdmin;
 
 use AppBundle\Entity\WorkTime;
 use AppBundle\Form\Filter\WorkTimeAdminFilterType;
+use AppBundle\Service\FinancialStatement;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController as BaseAdminController;
 use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -10,16 +11,36 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class AdminController extends BaseAdminController
 {
     /**
+     * @var FinancialStatement
+     */
+    private $financialStatement;
+
+    /**
+     * AdminController constructor.
+     * @param FinancialStatement $financialStatement
+     */
+    public function __construct(FinancialStatement $financialStatement)
+    {
+        $this->financialStatement = $financialStatement;
+    }
+
+    /**
      * @Route("/dashboard", name="admin_dashboard")
      */
     public function dashboardAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $workTimeRepository = $em->getRepository(WorkTime::class);
+
+        $actualMonthWorkTimes = $em->getRepository(WorkTime::class)->findAllActualMonth();
+        $todayFinacialStatement = $this->financialStatement->today($actualMonthWorkTimes);
+        $monthlyFinacialStatement = $this->financialStatement->allTime($actualMonthWorkTimes);
+//        dump($actualMonthWorkTimes);die;
         return $this->render('easy_admin/dashboard.html.twig', [
             'genusCount' => 5,
             'publishedGenusCount' => 5,
-            'randomGenus' => 1
+            'randomGenus' => 1,
+            'todayFinacialStatement'=>$todayFinacialStatement,
+            'monthlyFinacialStatement'=>$monthlyFinacialStatement
         ]);
     }
 

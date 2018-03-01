@@ -12,7 +12,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\WorkTimeRepository")
  * @ORM\Table(name="work_time")
  */
 class WorkTime
@@ -122,7 +122,7 @@ class WorkTime
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getStart()
     {
@@ -138,7 +138,7 @@ class WorkTime
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getEnd()
     {
