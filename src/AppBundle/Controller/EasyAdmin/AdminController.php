@@ -29,9 +29,9 @@ class AdminController extends BaseAdminController
      */
     public function dashboardAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        $this->em = $this->getDoctrine()->getManager();
 
-        $actualMonthWorkTimes = $em->getRepository(WorkTime::class)->findAllActualMonth();
+        $actualMonthWorkTimes = $this->em->getRepository(WorkTime::class)->findAllActualMonth();
         $todayFinacialStatement = $this->financialStatement->today($actualMonthWorkTimes);
         $monthlyFinacialStatement = $this->financialStatement->allTime($actualMonthWorkTimes);
 //        dump($actualMonthWorkTimes);die;

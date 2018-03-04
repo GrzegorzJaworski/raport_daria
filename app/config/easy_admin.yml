@@ -7,6 +7,7 @@ easy_admin:
         color_scheme : 'light'
         menu:
             - { label: 'Dashboard', route: 'admin_dashboard', icon: 'desktop', default: true }
+            - { label: 'Grafik', route: 'employees_shedule', icon: 'desktop'}
             - label: 'Raporty'
               icon: 'calendar'
               children:
@@ -14,7 +15,11 @@ easy_admin:
                   - { entity: 'Raport', label: 'Raport', icon: 'envelope' }
                   - 'Status'
             - { entity: 'User', label: 'Użytkownicy', icon: 'user' }
-            - { entity: 'Animal', label: 'Zwierzęta', icon: 'paw' }
+            - label: 'Zwierzęta'
+              icon: 'paw'
+              children:
+                - { entity: 'Animal', label: 'Zwierzęta', icon: 'paw' }
+                - { entity: 'VisitDate', label: 'Wizyty', icon: 'book' }
     list:
         title: 'Lista: %%entity_label%%'
         actions:
@@ -104,3 +109,13 @@ easy_admin:
                     - { property: 'description', type: 'ckeditor', label: 'Opis' }
                     - { property: 'playlistId', label: 'Id playlisty' }
                 form_options: { validation_groups: ['Registration'] }
+        VisitDate:
+            class: AppBundle\Entity\VisitDate
+            controller: AppBundle\Controller\EasyAdmin\VisitDateController
+            label: Test
+            form:
+                fields:
+                    - { property: 'begin', label: 'Od', type: date, type_options: { mapped: false, widget: 'single_text' } }
+                    - { property: 'end', label: 'Do', type: date, type_options: { mapped: false, widget: 'single_text' } }
+                    - { property: 'perDay', label: 'Ile dziennie', type: choice, type_options: {choices: { '1':'1', '2':'2', '3':'3', '4':'4'}, mapped: false, data: '1' } }
+                    - animal

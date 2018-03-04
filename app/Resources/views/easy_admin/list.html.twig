@@ -17,6 +17,13 @@
                         aria-expanded="false" aria-controls="collapseExample">
                     <i class="fa fa-search"></i>
                 </button>
+                {% if easyadmin_action_is_enabled_for_list_view('new', _entity_config.name) %}
+                    {% set _action = easyadmin_get_action_for_list_view('new', _entity_config.name) %}
+                            <a class="{{ _action.css_class|default('') }}" href="{{ path('easyadmin', _request_parameters|merge({ action: _action.name })) }}" target="{{ _action.target }}">
+                                {% if _action.icon %}<i class="fa fa-{{ _action.icon }}"></i>{% endif %}
+                                {{ _action.label is defined and not _action.label is empty ? _action.label|trans(_trans_parameters) }}
+                            </a>
+                {% endif %}
             </div>
         </div>
 
@@ -71,7 +78,7 @@
                                 <div class="col-sm-12">
                                     <button class="btn" type="submit" name="searchButton">
                                         <i class="fa fa-search"></i>
-                                        <span class="hidden-xs hidden-sm">{{ _action.label|default('action.search')|trans(_trans_parameters) }}</span>
+                                        <span class="hidden-xs hidden-sm">{{ 'action.search'|trans(_trans_parameters) }}</span>
                                     </button>
                                         <button class="btn btn-primary" type="submit" name="reportButton">
                                             <i class="fa fa-download"></i>
@@ -129,7 +136,7 @@
                                     <div class="col-sm-12">
                                         <button class="btn" type="submit">
                                             <i class="fa fa-search"></i>
-                                            <span class="hidden-xs hidden-sm">{{ _action.label|default('action.search')|trans(_trans_parameters) }}</span>
+                                            <span class="hidden-xs hidden-sm">{{ 'action.search'|trans(_trans_parameters) }}</span>
                                         </button>
                                     </div>
                                 </div>

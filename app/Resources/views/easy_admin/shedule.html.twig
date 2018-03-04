@@ -1,0 +1,72 @@
+{% extends '@EasyAdmin/default/layout.html.twig' %}
+{% set _content_title = 'Admin dashboard' %}
+{% block page_title -%}
+    {{ _content_title }}
+{% endblock %}
+{% block content_header %}
+    {#<h1 class="title">{{ _content_title }}</h1>#}
+{% endblock %}
+{% block main %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="form-inline form-group">
+                <label for="date">Wizyty na dzień : </label>
+                <input type="date" class="form-control" id="date" value="{{ animalsVisitBook[0].date.date | date('Y-m-d')}}">
+            </div>
+        </div>
+        <div class="panel-body">
+            <ul class="list-inline">
+                {% for animal in animalsVisitBook %}
+                    <li>{{ loop.index }}. {{ animal.animal.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="panel-footer">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Opiekun</th>
+                    <th>Zwierzę</th>
+                    <th>Start</th>
+                    <th>Koniec</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if animalsVisitBook | length ==  petsitterVisits | length%}
+                    {% for visit in petsitterVisits %}
+                        <tr>
+                            <td>Daria</td>
+                            <td>Mania</td>
+                            <td>08:00</td>
+                            <td>10:00</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    {% for visit in animalsVisitBook %}
+                        <tr>
+                            <td>
+                                <select class="form-control">
+                                    <option></option>
+                                    {% for petsitter in petsitters %}
+                                        <option>{{ petsitter.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><select class="form-control">
+                                    <option></option>
+                                    {% for animal in animalsVisitBook %}
+                                        <option>{{ animal.animal.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>08:00</td>
+                            <td>10:00</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

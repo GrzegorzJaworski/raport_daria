@@ -19,8 +19,15 @@ class EasyAdminSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            EasyAdminEvents::PRE_SEARCH => 'onPreSearch'
+            EasyAdminEvents::PRE_SEARCH => 'onPreSearch',
+            EasyAdminEvents::PRE_PERSIST => 'onPrePersist'
         ];
+    }
+
+    public function onPrePersist(GenericEvent $event)
+    {
+        $request = $event->getArgument('request')->query;
+//        dump($request);die;
     }
 
     public function onPreSearch(GenericEvent $event)
