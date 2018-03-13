@@ -3,8 +3,8 @@
 {% block page_title -%}
     {{ _content_title }}
 {% endblock %}
-{% block content_header %}
-    {#<h1 class="title">{{ _content_title }}</h1>#}
+{% block content_title %}
+    <h1 class="title">Grafik</h1>
 {% endblock %}
 {% block main %}
     <div class="panel panel-default">
@@ -32,41 +32,46 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% if animalsVisitBook | length ==  petsitterVisits | length%}
-                    {% for visit in petsitterVisits %}
-                        <tr>
-                            <td>Daria</td>
-                            <td>Mania</td>
-                            <td>08:00</td>
-                            <td>10:00</td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    {% for visit in animalsVisitBook %}
-                        <tr>
-                            <td>
-                                <select class="form-control">
-                                    <option></option>
-                                    {% for petsitter in petsitters %}
-                                        <option>{{ petsitter.username }}</option>
-                                    {% endfor %}
-                                </select>
-                            </td>
-                            <td><select class="form-control">
-                                    <option></option>
-                                    {% for animal in animalsVisitBook %}
-                                        <option>{{ animal.animal.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </td>
-                            <td>08:00</td>
-                            <td>10:00</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-
+                {% for visit in animalsVisitBook %}
+                    <tr>
+                        <td>
+                            <select class="form-control">
+                                <option></option>
+                                {% for petsitter in petsitters %}
+                                    <option value="{{ petsitter.id }}">{{ petsitter.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><select class="form-control">
+                                <option></option>
+                                {% for animal in animalsVisitBook %}
+                                    <option value="{{ animal.id }}">{{ animal.animal.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="time" class="form-control" id="time-start" ></td>
+                        <td><input type="time" class="form-control" id="time-end" ></td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 {% endblock %}
+{% block body_javascript %}
+    <script>
+        $('#date').change(function () {
+            var date = $(this).val();
+            
+            $.ajax({
+                url: '{{ path('employees_shedule') }}',
+                type: 'GET',
+                data: {date:date},
+                success:function () {
+
+                }
+            })
+            console.log(date)
+        })
+    </script>
+{% endblock body_javascript %}
