@@ -32,7 +32,7 @@ class RaportMail
     public function sendRaportMail($raport)
     {
         $message = \Swift_Message::newInstance('Raport od '. $raport->getUser()->getUsername())
-            ->setFrom('grzegorz_j@go2.pl')
+            ->setFrom('raport@raportdg.pl')
             ->setTo('dariagodlewska@dariagodlewska.pl')
             ->setBody(
                 $this->container->get('templating')->render(
