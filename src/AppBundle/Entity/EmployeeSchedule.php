@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="employees_shedule")
  */
-class EmployeesShedule
+class EmployeeSchedule
 {
     /**
      * @ORM\Id
@@ -33,11 +33,6 @@ class EmployeesShedule
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Animal")
      */
     private $animal;
-
-    /**
-     * @ORM\Column(type="date")
-     */
-    private $date;
 
     /**
      * @ORM\Column(type="time")

@@ -7,3 +7,7 @@ easy_admin_bundle:
     resource: "@AppBundle/Controller/EasyAdmin/AdminController.php"
     type:     annotation
     prefix:   /admin
+bnbc_upload:
+    resource: "@BnbcUploadBundle/Controller/"
+    type:     annotation
+    prefix:   /upload

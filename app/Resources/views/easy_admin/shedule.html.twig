@@ -7,6 +7,7 @@
     <h1 class="title">Grafik</h1>
 {% endblock %}
 {% block main %}
+    <form id="shedule-form" method="post">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="form-inline form-group">
@@ -15,9 +16,9 @@
             </div>
         </div>
         <div class="panel-body">
-            <ul class="list-inline">
+            <ul class="list-inline animial-visit-book">
                 {% for animal in animalsVisitBook %}
-                    <li>{{ loop.index }}. {{ animal.animal.name }}</li>
+                    <li id="{{ animal.id }}">{{ loop.index }}. {{ animal.animal.name }}</li>
                 {% endfor %}
             </ul>
         </div>
@@ -35,31 +36,94 @@
                 {% for visit in animalsVisitBook %}
                     <tr>
                         <td>
-                            <select class="form-control">
-                                <option></option>
+                            <select name="petsitter[]" class="form-control">
+                                <option value="0"></option>
                                 {% for petsitter in petsitters %}
                                     <option value="{{ petsitter.id }}">{{ petsitter.username }}</option>
                                 {% endfor %}
                             </select>
                         </td>
-                        <td><select class="form-control">
-                                <option></option>
+                        <td>
+                            <select name="visit[]" class="form-control animals-select" data-selected="0">
+                                <option value="0"></option>
                                 {% for animal in animalsVisitBook %}
                                     <option value="{{ animal.id }}">{{ animal.animal.name }}</option>
                                 {% endfor %}
                             </select>
                         </td>
-                        <td><input type="time" class="form-control" id="time-start" ></td>
-                        <td><input type="time" class="form-control" id="time-end" ></td>
+                        <td>
+                            <input name="start[]" type="time" class="form-control" id="time-start">
+                        </td>
+                        <td>
+                            <input name="end[]" type="time" class="form-control" id="time-end">
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
+            <button id="mySubmitButton" class="btn btn-success text-center" type="submit">Zapisz</button>
         </div>
     </div>
+    </form>
 {% endblock %}
 {% block body_javascript %}
     <script>
+
+        $(document).on("submit", "#shedule-form", function(e){
+            e.preventDefault();
+            return  false;
+        });
+
+        $(document).on("click", "#mySubmitButton", function(e){
+            e.preventDefault();
+
+            // get the properties and values from the form
+            data = $("#shedule-form").serializeObject();
+
+            // always makes sense to signal user that something is happening
+            $('#loadingSpinner').show();
+
+            // simple approach avoid submitting multiple times
+            $('#mySubmitButton').hide();
+
+            $.ajax({
+                url: '{{ path('shedule_new') }}',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                success:function(data){
+
+                    $('#loadingSpinner').hide();
+                    $('#mySubmitButton').show();
+
+                    console.log(data);
+                    if(data.status == 'saved'){
+                        console.log("entity saved ! ");
+                    }
+                    if(data.status == 'invalid'){
+                        console.log("entity submitted was invalid, use try catch and getMessage of eventual errors in you controller action, you can pass all that to the returning array you can receive and parse here ! ");
+                    }
+                }
+            });
+
+        });
+        $.fn.serializeObject = function()
+        {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function() {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+
         $('#date').change(function () {
             var date = $(this).val();
             
@@ -67,11 +131,45 @@
                 url: '{{ path('employees_shedule') }}',
                 type: 'GET',
                 data: {date:date},
-                success:function () {
+                success:function (data) {
+                    $('.animial-visit-book li').remove()
+                    var animals = data['animals'];
+                    for( var i = 0; i < animals.length; i++) {
+                        console.log(animals[i]);
+                        $('.animial-visit-book').append('<li>'+(i+1)+'. '+animals[i]["animalName"]+' </li>')
+                    }
 
                 }
-            })
+            });
             console.log(date)
         })
+        
+        $('.animals-select').change(function () {
+            var selected =  $(this).data("selected");
+            var value = $(this).val();
+            $(this).data("selected",value);
+
+            var optionsValue = $('.animals-select option[value='+value+']');
+            var optionsSelected = $('.animals-select option[value='+selected+']');
+            if (value != 0) {
+                optionsValue.each(function () {
+                    if (!$(this).is(':selected')){
+                        $(this).hide()
+                        $('#'+value).addClass('bg-success')
+                    }
+                });
+            }
+            if (selected != 0) {
+                optionsSelected.each(function () {
+                    if (!$(this).is(':selected')){
+                        $(this).show()
+                        $('#'+selected).removeClass('bg-success')
+                    }
+                });
+            }
+
+        })
+
+        
     </script>
 {% endblock body_javascript %}

@@ -1,0 +1,18 @@
+{%  block _date_visits_entry_widget %}
+    <table class="table">
+        <tbody>
+        {% for key,visit in  easyadmin.item.visits%}
+        <tr>
+            <td>{{ form_row(form.animal) }}</td>
+            <td>{{ form_row(form.user) }}</td>
+            <td>{{ form_row(form.startTime, { 'attr': { 'class': 'js-clockpicker' } }) }}</td>
+            <td>{{ form_row(form.endTime, { 'attr': { 'class': 'js-clockpicker' } }) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+   {#<div class="form-inline">#}
+
+       {#{{ form(form) }}#}
+   {#</div>#}
+{% endblock %}

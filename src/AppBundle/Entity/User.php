@@ -41,11 +41,17 @@ class User extends BaseUser
      */
     private $hourlyRateDrive;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\VisitDate", mappedBy="user")
+     */
+    private $visits;
+
     public function __construct()
     {
         parent::__construct();
         $this->workTime = new ArrayCollection();
         $this->raport = new ArrayCollection();
+        $this->visits = new ArrayCollection();
     }
 
     public function getId()
@@ -115,5 +121,21 @@ class User extends BaseUser
     public function setHourlyRateDrive($hourlyRateDrive)
     {
         $this->hourlyRateDrive = $hourlyRateDrive;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVisits()
+    {
+        return $this->visits;
+    }
+
+    /**
+     * @param mixed $visits
+     */
+    public function setVisits($visits)
+    {
+        $this->visits = $visits;
     }
 }

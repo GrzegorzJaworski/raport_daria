@@ -1,291 +1,308 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="row">
-        <h3>Z której wizyty chcesz dodać filmy?</h3>
-        <div class="col-xs-12">
-            <div class="form-group">
-                <label>Zwierzę</label>
-                <select class="form-control" id="js-animal">
-                    <option></option>
-                    {% for animal in animals %}
-                        <option value="{{ animal.playlistId }}">{{ animal.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Data:</label>
-                <input id="date" type="date" class="form-control" value="{{ "now"|date("Y-m-d") }}">
-            </div>
-        </div>
-    </div>
-
-<span id="signinButton" class="pre-sign-in">
-      <!-- IMPORTANT: Replace the value of the <code>data-clientid</code>
-           attribute in the following tag with your project's client ID. -->
-      <span
-              class="g-signin"
-              data-callback="signinCallback"
-              data-clientid="619397655888-d7b42bm64upgj5h926iiqfmeh80p1t4r.apps.googleusercontent.com"
-              data-cookiepolicy="single_host_origin"
-              data-scope="https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube">
-      </span>
-    </span>
-
-<div class="post-sign-in">
-
-    <div>
-        <div class="form-group">
-            <input type="file" id="file" class="button" accept="video/*" multiple>
-        </div>
-
-        <button id="button" class="btn btn-info">Upload Video</button>
-        <br>
-        <br>
-        <div class="during-upload">
-
-        </div>
-
-        <div class="post-upload">
-            <p>Uploaded video with id <span id="video-id"></span>. Polling for status...</p>
-            <ul id="post-upload-status"></ul>
-            <div id="player"></div>
-        </div>
-    </div>
-</div>
-    <script>
-        /*
-Copyright 2015 Google Inc. All Rights Reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
-        var signinCallback = function (result){
-            if(result.access_token) {
-                var uploadVideo = new UploadVideo();
-                uploadVideo.ready(result.access_token);
-            }
-        };
-
-        var STATUS_POLLING_INTERVAL_MILLIS = 60 * 1000; // One minute.
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
 
 
-        /**
-         * YouTube video uploader class
-         *
-         * @constructor
-         */
-        var UploadVideo = function() {
-            /**
-             * The array of tags for the new YouTube video.
-             *
-             * @attribute tags
-             * @type Array.<string>
-             * @default ['google-cors-upload']
-             */
-            this.tags = ['youtube-cors-upload'];
+    {{ form_row(form.animal) }}
+    {{ form_row(form.date) }}
+    {{ form_row(form.movie) }}
+    <button type="submit" class="btn btn-primary">Wyślij</button>
+    {{ form_end(form) }}
+    {#<div class="row">#}
+        {#<h3>Z której wizyty chcesz dodać filmy?</h3>#}
+        {#<div class="col-xs-12">#}
+            {#<div class="form-group">#}
+                {#<label>Zwierzę</label>#}
+                {#<select class="form-control" id="js-animal">#}
+                    {#<option></option>#}
+                    {#{% for animal in animals %}#}
+                        {#<option value="{{ animal.playlistId }}">{{ animal.name }}</option>#}
+                    {#{% endfor %}#}
+                {#</select>#}
+            {#</div>#}
+            {#<div class="form-group">#}
+                {#<label>Data:</label>#}
+                {#<input id="date" type="date" class="form-control" value="{{ "now"|date("Y-m-d") }}">#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
 
-            /**
-             * The numeric YouTube
-             * [category id](https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.videoCategories.list?part=snippet&regionCode=us).
-             *
-             * @attribute categoryId
-             * @type number
-             * @default 22
-             */
-            this.categoryId = 15;
+{#<span id="signinButton" class="pre-sign-in">#}
+      {#<!-- IMPORTANT: Replace the value of the <code>data-clientid</code>#}
+           {#attribute in the following tag with your project's client ID. -->#}
+      {#<span#}
+              {#class="g-signin"#}
+              {#data-callback="signinCallback"#}
+              {#data-clientid="619397655888-d7b42bm64upgj5h926iiqfmeh80p1t4r.apps.googleusercontent.com"#}
+              {#data-cookiepolicy="single_host_origin"#}
+              {#data-scope="https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube">#}
+      {#</span>#}
+    {#</span>#}
 
-            /**
-             * The id of the new video.
-             *
-             * @attribute videoId
-             * @type string
-             * @default ''
-             */
-            this.videoId = '';
+{#<div class="post-sign-in">#}
 
-            this.uploadStartTime = 0;
-        };
+    {#<div>#}
+        {#<div class="form-group">#}
+            {#<input type="file" id="file" class="button" accept="video/*" multiple>#}
+        {#</div>#}
+
+        {#<button id="button" class="btn btn-info">Upload Video</button>#}
+        {#<br>#}
+        {#<br>#}
+        {#<div class="during-upload">#}
+
+        {#</div>#}
+
+        {#<div class="post-upload">#}
+            {#<p>Uploaded video with id <span id="video-id"></span>. Polling for status...</p>#}
+            {#<ul id="post-upload-status"></ul>#}
+            {#<div id="player"></div>#}
+        {#</div>#}
+    {#</div>#}
+{#</div>#}
+    {#<script>#}
+        {#/*#}
+{#Copyright 2015 Google Inc. All Rights Reserved.#}
+
+{#Licensed under the Apache License, Version 2.0 (the "License");#}
+{#you may not use this file except in compliance with the License.#}
+{#You may obtain a copy of the License at#}
+
+  {#http://www.apache.org/licenses/LICENSE-2.0#}
+
+{#Unless required by applicable law or agreed to in writing, software#}
+{#distributed under the License is distributed on an "AS IS" BASIS,#}
+{#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.#}
+{#See the License for the specific language governing permissions and#}
+{#limitations under the License.#}
+{#*/#}
+
+        {#var signinCallback = function (result){#}
+            {#if(result.access_token) {#}
+                {#var uploadVideo = new UploadVideo();#}
+                {#uploadVideo.ready(result.access_token);#}
+            {#}#}
+        {#};#}
+
+        {#var STATUS_POLLING_INTERVAL_MILLIS = 60 * 1000; // One minute.#}
 
 
-        UploadVideo.prototype.ready = function(accessToken) {
-            this.accessToken = accessToken;
-            this.gapi = gapi;
-            this.authenticated = true;
-            this.gapi.client.request({
-                path: '/youtube/v3/channels',
-                params: {
-                    part: 'snippet',
-                    mine: true
-                },
-                callback: function(response) {
-                    if (response.error) {
-                        console.log(response.error.message);
-                    } else {
-                        $('#channel-name').text(response.items[0].snippet.title);
-                        $('#channel-thumbnail').attr('src', response.items[0].snippet.thumbnails.default.url);
+        {#/**#}
+         {#* YouTube video uploader class#}
+         {#*#}
+         {#* @constructor#}
+         {#*/#}
+        {#var UploadVideo = function() {#}
+            {#/**#}
+             {#* The array of tags for the new YouTube video.#}
+             {#*#}
+             {#* @attribute tags#}
+             {#* @type Array.<string>#}
+             {#* @default ['google-cors-upload']#}
+             {#*/#}
+            {#this.tags = ['youtube-cors-upload'];#}
 
-                        $('.pre-sign-in').hide();
-                        $('.post-sign-in').show();
-                    }
-                }.bind(this)
-            });
-            $('#button').on("click", this.handleUploadClicked.bind(this));
-        };
+            {#/**#}
+             {#* The numeric YouTube#}
+             {#* [category id](https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.videoCategories.list?part=snippet&regionCode=us).#}
+             {#*#}
+             {#* @attribute categoryId#}
+             {#* @type number#}
+             {#* @default 22#}
+             {#*/#}
+            {#this.categoryId = 15;#}
 
-        /**
-         * Uploads a video file to YouTube.
-         *
-         * @method uploadFile
-         * @param {object} file File object corresponding to the video to upload.
-         */
-        UploadVideo.prototype.uploadFile = function(file, x) {
-            var date = $('#date').val();
-            var metadata = {
-                snippet: {
-                    title: $('#js-animal').text()+' '+date+' | Opieka nad zwierzętami Daira Godlewska',
-                    description: '',
-                    tags: this.tags,
-                    categoryId: this.categoryId
-                },
-                status: {
-                    privacyStatus: 'unlisted'
-                }
-            };
-            var uploader = new MediaUploader({
-                baseUrl: 'https://www.googleapis.com/upload/youtube/v3/videos',
-                file: file,
-                token: this.accessToken,
-                metadata: metadata,
-                params: {
-                    part: Object.keys(metadata).join(',')
-                },
-                onError: function(data) {
-                    var message = data;
-                    // Assuming the error is raised by the YouTube API, data will be
-                    // a JSON string with error.message set. That may not be the
-                    // only time onError will be raised, though.
-                    try {
-                        var errorResponse = JSON.parse(data);
-                        message = errorResponse.error.message;
-                    } finally {
-                        alert(message);
-                    }
-                }.bind(this),
-                onProgress: function(data) {
-                    var currentTime = Date.now();
-                    var bytesUploaded = data.loaded;
-                    var totalBytes = data.total;
-                    // The times are in millis, so we need to divide by 1000 to get seconds.
-                    var bytesPerSecond = bytesUploaded / ((currentTime - this.uploadStartTime) / 1000);
-                    var estimatedSecondsRemaining = (totalBytes - bytesUploaded) / bytesPerSecond;
-                    var percentageComplete = Math.round((bytesUploaded * 100) / totalBytes);
+            {#/**#}
+             {#* The id of the new video.#}
+             {#*#}
+             {#* @attribute videoId#}
+             {#* @type string#}
+             {#* @default ''#}
+             {#*/#}
+            {#this.videoId = '';#}
 
-                    var progressBar = $('.progress'+x+' .progress-bar');
-                    progressBar.attr({
-                        'style': 'width:' + percentageComplete + '%',
-                        // max: totalBytes
-                    });
-                    progressBar.text(
-                        percentageComplete+'%'
-                    );
+            {#this.uploadStartTime = 0;#}
+        {#};#}
 
-                    $('.during-upload').show();
-                }.bind(this),
-                onComplete: function(data) {
-                    var uploadResponse = JSON.parse(data);
-                    alert(file.name+' - plik został poprawnie przesłany');
-                    this.videoId = uploadResponse.id;
-                    // $('#video-id').text(this.videoId);
-                    // $('.post-upload').show();
-                    // this.pollForVideoStatus();
-                    var playlistId = $('#js-animal').val();
-                    addToPlaylist(this.videoId);
-                }.bind(this)
-            });
-            // This won't correspond to the *exact* start of the upload, but it should be close enough.
-            this.uploadStartTime = Date.now();
-            uploader.upload();
-        };
 
-        UploadVideo.prototype.handleUploadClicked = function() {
-            // $('#button').attr('disabled', true);
-            var files = $('#file').get(0).files;
-            for(var x=0; x<files.length; x++){
-                var progress = '<div class="progress'+x+'">\n' +
-                    '                <p>'+files[x].name+'</p>\n' +
-                    '                <div class="progress-bar" role="progressbar"\n' +
-                    '                     aria-valuemin="0" aria-valuemax="100" style="width:70%">\n' +
-                    '                </div>\n' +
-                    '            </div><br>';
+        {#UploadVideo.prototype.ready = function(accessToken) {#}
+            {#this.accessToken = 'ya29.GlySBTmHji5Z5vxDgupgFit7uSAis-8FwQZvJ-EAI2p4_sbn7aqicG5r2gIp4_47h8pppxM8rUx3GGxIcY46NwRSxGFTCjkjWXSWK3krd_B4mvKV4ePGp9obLizIww';#}
+            {#this.gapi = gapi;#}
+            {#this.authenticated = true;#}
+            {#this.gapi.client.request({#}
+                {#path: '/youtube/v3/channels',#}
+                {#params: {#}
+                    {#part: 'snippet',#}
+                    {#mine: true#}
+                {#},#}
+                {#callback: function(response) {#}
+                    {#if (response.error) {#}
+                        {#console.log(response.error.message);#}
+                    {#} else {#}
+                        {#$('#channel-name').text(response.items[0].snippet.title);#}
+                        {#$('#channel-thumbnail').attr('src', response.items[0].snippet.thumbnails.default.url);#}
 
-                $(progress).appendTo($(".during-upload"));
-                this.uploadFile(files[x], x);
+                        {#$('.pre-sign-in').hide();#}
+                        {#$('.post-sign-in').show();#}
+                    {#}#}
+                {#}.bind(this)#}
+            {#});#}
+            {#$('#button').on("click", this.handleUploadClicked.bind(this));#}
+        {#};#}
 
-            }
-        };
+        {#/**#}
+         {#* Uploads a video file to YouTube.#}
+         {#*#}
+         {#* @method uploadFile#}
+         {#* @param {object} file File object corresponding to the video to upload.#}
+         {#*/#}
+        {#UploadVideo.prototype.uploadFile = function(file, x) {#}
+            {#var date = $('#date').val();#}
+            {#var title = $('#js-animal option:selected').text()+' '+date+' | Opieka nad zwierzętami Daira Godlewska';#}
+            {#console.log(title);#}
+            {#var metadata = {#}
+                {#snippet: {#}
+                    {#title: title,#}
+                    {#description: '',#}
+                    {#tags: this.tags,#}
+                    {#categoryId: this.categoryId#}
+                {#},#}
+                {#status: {#}
+                    {#privacyStatus: 'unlisted'#}
+                {#}#}
+            {#};#}
+            {#var uploader = new MediaUploader({#}
+                {#baseUrl: 'https://www.googleapis.com/upload/youtube/v3/videos',#}
+                {#file: file,#}
+                {#token: 'ya29.GlySBTmHji5Z5vxDgupgFit7uSAis-8FwQZvJ-EAI2p4_sbn7aqicG5r2gIp4_47h8pppxM8rUx3GGxIcY46NwRSxGFTCjkjWXSWK3krd_B4mvKV4ePGp9obLizIww',#}
+                {#metadata: metadata,#}
+                {#params: {#}
+                    {#part: Object.keys(metadata).join(',')#}
+                {#},#}
+                {#onError: function(data) {#}
+                    {#var message = data;#}
+                    {#// Assuming the error is raised by the YouTube API, data will be#}
+                    {#// a JSON string with error.message set. That may not be the#}
+                    {#// only time onError will be raised, though.#}
+                    {#try {#}
+                        {#var errorResponse = JSON.parse(data);#}
+                        {#message = errorResponse.error.message;#}
+                    {#} finally {#}
+                        {#alert(message);#}
+                    {#}#}
+                {#}.bind(this),#}
+                {#onProgress: function(data) {#}
+                    {#var currentTime = Date.now();#}
+                    {#var bytesUploaded = data.loaded;#}
+                    {#var totalBytes = data.total;#}
+                    {#// The times are in millis, so we need to divide by 1000 to get seconds.#}
+                    {#var bytesPerSecond = bytesUploaded / ((currentTime - this.uploadStartTime) / 1000);#}
+                    {#var estimatedSecondsRemaining = (totalBytes - bytesUploaded) / bytesPerSecond;#}
+                    {#var percentageComplete = Math.round((bytesUploaded * 100) / totalBytes);#}
 
-        // UploadVideo.prototype.pollForVideoStatus = function() {
-        //     this.gapi.client.request({
-        //         path: '/youtube/v3/videos',
-        //         params: {
-        //             part: 'status,player',
-        //             id: this.videoId
-        //         },
-        //         callback: function(response) {
-        //             if (response.error) {
-        //                 // The status polling failed.
-        //                 console.log(response.error.message);
-        //                 setTimeout(this.pollForVideoStatus.bind(this), STATUS_POLLING_INTERVAL_MILLIS);
-        //             } else {
-        //                 var uploadStatus = response.items[0].status.uploadStatus;
-        //                 switch (uploadStatus) {
-        //                     // This is a non-final status, so we need to poll again.
-        //                     case 'uploaded':
-        //                         $('#post-upload-status').append('<li>Upload status: ' + uploadStatus + '</li>');
-        //                         setTimeout(this.pollForVideoStatus.bind(this), STATUS_POLLING_INTERVAL_MILLIS);
-        //                         break;
-        //                     // The video was successfully transcoded and is available.
-        //                     case 'processed':
-        //                         $('#player').append(response.items[0].player.embedHtml);
-        //                         $('#post-upload-status').append('<li>Final status.</li>');
-        //                         break;
-        //                     // All other statuses indicate a permanent transcoding failure.
-        //                     default:
-        //                         $('#post-upload-status').append('<li>Transcoding failed.</li>');
-        //                         break;
-        //                 }
-        //             }
-        //         }.bind(this)
-        //     });
-        // };
+                    {#var progressBar = $('.progress'+x+' .progress-bar');#}
+                    {#progressBar.attr({#}
+                        {#'style': 'width:' + percentageComplete + '%',#}
+                        {#// max: totalBytes#}
+                    {#});#}
+                    {#progressBar.text(#}
+                        {#percentageComplete+'%'#}
+                    {#);#}
 
-    </script>
+                    {#$('.during-upload').show();#}
+                {#}.bind(this),#}
+                {#onComplete: function(data) {#}
+                    {#var uploadResponse = JSON.parse(data);#}
+                    {#alert(file.name+' - plik został poprawnie przesłany');#}
+                    {#this.videoId = uploadResponse.id;#}
+                    {#// $('#video-id').text(this.videoId);#}
+                    {#// $('.post-upload').show();#}
+                    {#// this.pollForVideoStatus();#}
+                    {#var playlistId = $('#js-animal').val();#}
+                    {#addToPlaylist(this.videoId);#}
+                {#}.bind(this)#}
+            {#});#}
+            {#// This won't correspond to the *exact* start of the upload, but it should be close enough.#}
+            {#this.uploadStartTime = Date.now();#}
+            {#uploader.upload();#}
+        {#};#}
+
+        {#UploadVideo.prototype.handleUploadClicked = function() {#}
+            {#// $('#button').attr('disabled', true);#}
+            {#var files = $('#file').get(0).files;#}
+            {#for(var x=0; x<files.length; x++){#}
+                {#var progress = '<div class="progress'+x+'">\n' +#}
+                    {#'                <p>'+files[x].name+'</p>\n' +#}
+                    {#'                <div class="progress-bar" role="progressbar"\n' +#}
+                    {#'                     aria-valuemin="0" aria-valuemax="100" style="width:70%">\n' +#}
+                    {#'                </div>\n' +#}
+                    {#'            </div><br>';#}
+
+                {#$(progress).appendTo($(".during-upload"));#}
+                {#this.uploadFile(files[x], x);#}
+
+            {#}#}
+        {#};#}
+
+        {#// UploadVideo.prototype.pollForVideoStatus = function() {#}
+        {#//     this.gapi.client.request({#}
+        {#//         path: '/youtube/v3/videos',#}
+        {#//         params: {#}
+        {#//             part: 'status,player',#}
+        {#//             id: this.videoId#}
+        {#//         },#}
+        {#//         callback: function(response) {#}
+        {#//             if (response.error) {#}
+        {#//                 // The status polling failed.#}
+        {#//                 console.log(response.error.message);#}
+        {#//                 setTimeout(this.pollForVideoStatus.bind(this), STATUS_POLLING_INTERVAL_MILLIS);#}
+        {#//             } else {#}
+        {#//                 var uploadStatus = response.items[0].status.uploadStatus;#}
+        {#//                 switch (uploadStatus) {#}
+        {#//                     // This is a non-final status, so we need to poll again.#}
+        {#//                     case 'uploaded':#}
+        {#//                         $('#post-upload-status').append('<li>Upload status: ' + uploadStatus + '</li>');#}
+        {#//                         setTimeout(this.pollForVideoStatus.bind(this), STATUS_POLLING_INTERVAL_MILLIS);#}
+        {#//                         break;#}
+        {#//                     // The video was successfully transcoded and is available.#}
+        {#//                     case 'processed':#}
+        {#//                         $('#player').append(response.items[0].player.embedHtml);#}
+        {#//                         $('#post-upload-status').append('<li>Final status.</li>');#}
+        {#//                         break;#}
+        {#//                     // All other statuses indicate a permanent transcoding failure.#}
+        {#//                     default:#}
+        {#//                         $('#post-upload-status').append('<li>Transcoding failed.</li>');#}
+        {#//                         break;#}
+        {#//                 }#}
+        {#//             }#}
+        {#//         }.bind(this)#}
+        {#//     });#}
+        {#// };#}
+
+    {#</script>#}
 {% endblock %}
 
 {% block stylesheets %}
   {{ parent() }}
 
-    <link rel="stylesheet" href="{{ asset('vendor/youtube/upload_video.css') }}">
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Open+Sans' type='text/css'>
+    {#<link rel="stylesheet" href="{{ asset('vendor/youtube/upload_video.css') }}">#}
+    {#<link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Open+Sans' type='text/css'>#}
 
 {% endblock %}
 
 {% block javascripts %}
-    <script src="//apis.google.com/js/client:plusone.js"></script>
-    <script src="{{ asset('vendor/youtube/auth.js') }}"></script>
-    <script src="{{ asset('vendor/youtube/playlist_updates.js') }}"></script>
-    <script src="{{ asset('vendor/youtube/cors_upload.js') }}"></script>
-    <script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>
+    {{ parent() }}
+    {#<script src="//apis.google.com/js/client:plusone.js"></script>#}
+    {#<script src="{{ asset('vendor/youtube/auth.js') }}"></script>#}
+    {#<script src="{{ asset('vendor/youtube/playlist_updates.js') }}"></script>#}
+    {#<script src="{{ asset('vendor/youtube/cors_upload.js') }}"></script>#}
+    {#<script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>#}
+    {#<script src="{{ asset('bundles/bnbcupload/js/1_jquery.min.js') }}"></script>#}
+    <script src="{{ asset('bundles/bnbcupload/js/2_jquery.ui.widget.js') }}"></script>
+    <script src="{{ asset('bundles/bnbcupload/js/3_jquery.iframe-transport.js') }}"></script>
+    <script src="{{ asset('bundles/bnbcupload/js/4_jquery.fileupload.js') }}"></script>
+    <script src="{{ asset('bundles/bnbcupload/js/5_init.js') }}"></script>
 {% endblock %}
 

@@ -5,9 +5,19 @@ easy_admin:
     design:
 #        brand_color: 'rgba(245,245,245, 0.8)'
         color_scheme : 'light'
+        form_theme:
+            - vertical
+            - easy_admin/_form_theme.html.twig
+        assets:
+            css:
+                - '/vendor/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.css'
+                - '/css/collection.css'
+            js:
+                - '/vendor/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.js'
+                - '/js/clockpicker.js'
         menu:
             - { label: 'Dashboard', route: 'admin_dashboard', icon: 'desktop', default: true }
-            - { label: 'Grafik', route: 'employees_shedule', icon: 'desktop'}
+#            - { label: 'Grafik', route: 'employees_shedule', icon: 'desktop'}
             - label: 'Raporty'
               icon: 'calendar'
               children:
@@ -20,6 +30,8 @@ easy_admin:
               children:
                 - { entity: 'Animal', label: 'Zwierzęta', icon: 'paw' }
                 - { entity: 'VisitDate', label: 'Wizyty', icon: 'book' }
+            - { entity: 'EmployeesSchedule'}
+            - { entity: 'Date'}
     list:
         title: 'Lista: %%entity_label%%'
         actions:
@@ -112,10 +124,39 @@ easy_admin:
         VisitDate:
             class: AppBundle\Entity\VisitDate
             controller: AppBundle\Controller\EasyAdmin\VisitDateController
-            label: Test
+            label: Wizyty
+            list:
+                fields:
+                    - id
+                    - { property: 'animal', label: 'Zwierzę' }
+                    - { property: 'date', type: 'date', label: 'Data' }
             form:
                 fields:
                     - { property: 'begin', label: 'Od', type: date, type_options: { mapped: false, widget: 'single_text' } }
                     - { property: 'end', label: 'Do', type: date, type_options: { mapped: false, widget: 'single_text' } }
                     - { property: 'perDay', label: 'Ile dziennie', type: choice, type_options: {choices: { '1':'1', '2':'2', '3':'3', '4':'4'}, mapped: false, data: '1' } }
                     - animal
+        EmployeesSchedule:
+            class: AppBundle\Entity\EmployeesSchedule
+#            controller: AppBundle\Controller\EasyAdmin\VisitDateController
+            label: Grafik
+            form:
+                fields:
+                    - { property: 'date', label: 'Od', type: date, type_options: { widget: 'single_text' } }
+                    -
+                        property: 'employeeShedule'
+                        type: 'collection'
+                        type_options:
+                            entry_type: AppBundle\Form\WorkTimeFormType
+        Date:
+            class: AppBundle\Entity\Date
+            form:
+                fields:
+                    - date
+                    -
+                        property: 'visits'
+                        type: 'collection'
+                        type_options:
+                            entry_type: AppBundle\Form\VisitBookFormType
+                            allow_delete: false
+                            allow_add: false

@@ -12,7 +12,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="VisitDateRepository")
  * @ORM\Table(name="visit_date")
  */
 class VisitDate
@@ -30,10 +30,24 @@ class VisitDate
     private $animal;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Date", inversedBy="visits")
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="visits")
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $startTime;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $endTime;
     /**
      * @return mixed
      */
@@ -43,7 +57,7 @@ class VisitDate
     }
 
     /**
-     * @return mixed
+     * @return Animal
      */
     public function getAnimal()
     {
@@ -51,9 +65,9 @@ class VisitDate
     }
 
     /**
-     * @param mixed $animal
+     * @param Animal $animal
      */
-    public function setAnimal($animal)
+    public function setAnimal(Animal $animal)
     {
         $this->animal = $animal;
     }
@@ -77,5 +91,58 @@ class VisitDate
     public function getTest()
     {
 
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
+
+    /**
+     * @param mixed $startTime
+     */
+    public function setStartTime($startTime)
+    {
+        $this->startTime = $startTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndTime()
+    {
+        return $this->endTime;
+    }
+
+    /**
+     * @param mixed $endTime
+     */
+    public function setEndTime($endTime)
+    {
+        $this->endTime = $endTime;
+    }
+
+    public function __toString()
+    {
+        return $this->getAnimal()->getName();
     }
 }
